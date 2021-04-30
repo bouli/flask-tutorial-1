@@ -4,6 +4,7 @@ import click
 from flask import current_app, g #g=>globals
 from flask.cli import with_appcontext
 
+#return the instance of the DB connection
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -13,8 +14,26 @@ def get_db():
         g.db.row_factory = sqlite3.Row
     return g.db
 
+#close the DB instance
 def close_db():
     db = g.pop('db', None)
 
     if db is not None:
         db.close()
+
+#create a new DB with the default schemas 
+def init_db():
+    db = get_db()
+
+    with current_app.open_resource('schema.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+    init_db()
+    click.echo('Felicidades! Seu DB está novinho em folha!')
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
+    app.cli.add_command(init_db_command)
