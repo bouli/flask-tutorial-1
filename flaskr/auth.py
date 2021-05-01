@@ -50,13 +50,13 @@ def register():
 
 @bp.route('/login',methods=('GET','POST'))
 def login():
-    db = get_db()
-    error = None
-
-    username = request.form['username']
-    password = request.form['password']
-
     if request.method == 'POST':
+        db = get_db()
+        error = None
+        
+        username = request.form['username']
+        password = request.form['password']
+        
         user = db.execute(
             'SELECT * FROM users WHERE username = ?',
             username
