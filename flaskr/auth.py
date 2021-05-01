@@ -58,8 +58,7 @@ def login():
         password = request.form['password']
         
         user = db.execute(
-            'SELECT * FROM users WHERE username = ?',
-            username
+            'SELECT * FROM users WHERE username = ?', (username,)
         ).fetchone()
 
         if user is None or not check_password_hash(user['password'], password):
