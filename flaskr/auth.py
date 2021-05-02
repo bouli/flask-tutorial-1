@@ -17,7 +17,6 @@ def load_logged_in_user():
         g.user = get_db().execute(
             'SELECT * FROM users WHERE id = ?', (user_id, )
         ).fetchone()
-    #pq aqui não tem un pass ou return pra "parar" a execução?
 
 
 @bp.route('/register', methods=('GET', 'POST'))
